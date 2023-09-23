@@ -1,0 +1,30 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <div class="auth-page-container">
+    <div class="card auth-card">
+        <h2 class="auth-form-title">Register</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label class="auth-form-label">Username:
+                <input class="auth-form-input" type="text" name="username">
+            </label>
+            
+            <label class="auth-form-label">Email:
+                <input class="auth-form-input" type="email" name="email">
+            </label>
+            
+            <label class="auth-form-label">Password:
+                <input class="auth-form-input" type="password" name="password1">
+            </label>
+            
+            <label class="auth-form-label">Confirm Password:
+                <input class="auth-form-input" type="password" name="password2">
+            </label>
+            
+            <button class="auth-form-button" type="submit">Register</button>
+        </form>
+        <a href="{% url 'login' %}">Already have an account? Login</a>
+    </div>
+    </div>
+{% endblock %}

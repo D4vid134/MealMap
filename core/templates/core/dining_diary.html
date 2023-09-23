@@ -1,0 +1,90 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="mt-5 container-fluid" style="margin: 0;">
+    <h1>Your Restaurants</h1>
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Restaurant</th>
+                <th>Times Eaten</th>
+                <th>Your Rating</th>
+                <th>Your Comment</th>
+                <th>Favorite</th>
+                <th>Favorite Dish</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in user_restaurants %}
+            <tr>
+                <td>{{ data.restaurant.name }}</td>
+                <td>
+                    <button class="btn btn-sm btn-danger decrement" data-id="{{ data.id }}">-</button>
+                    <span id="times-eaten-{{data.id}}">{{ data.times_eaten }}</span>
+                    <button class="btn btn-sm btn-success increment" data-id="{{ data.id }}">+</button>
+                
+                </td>
+                <td class="star-rating" data-rating="{{ data.user_rating }}" data-id="{{ data.id }}">
+                    <i class="bi bi-star" data-value="1"></i>
+                    <i class="bi bi-star" data-value="2"></i>
+                    <i class="bi bi-star" data-value="3"></i>
+                    <i class="bi bi-star" data-value="4"></i>
+                    <i class="bi bi-star" data-value="5"></i>
+                </td>
+                <input type="hidden" data-id="{{ data.id }}" name="user_rating" value="{{ data.user_rating }}">
+                <td>
+                    <textarea class="form-control user-comment" data-id="{{ data.id }}" name="user_comment" placeholder="Add your comment">{{ data.user_comment }}</textarea>
+                </td>
+                <td>
+                    <input type="checkbox" class="form-check-input is-favorite" data-id="{{ data.id }}" name="is_favorite" {% if data.is_favorite %} checked {% endif %}>
+                </td>
+                <td>
+                    <textarea class="form-control favorite-dish" data-id="{{ data.id }}" name="favorite-dish" placeholder="Add your favorite dish">{{ data.favorite_dish }}</textarea>
+                </td>
+                <td>
+                    <!-- Trigger the modal with a button -->
+                    <button type="button" class="btn btn-primary btn-sm" style="transform: translateX(25%) translateY(50%);" place-id="{{ data.restaurant.place_id }}" data-toggle="modal" data-target="#restaurantDetailsModal">Details</button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm delete-button" style="transform: translateX(25%) translateY(50%);" data-id="{{ data.id }}">Delete</button>
+                </td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal -->
+    <div class="modal fade" id="restaurantDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-2" id="restaurant-name">Restaurant Details</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Address: </strong><span id="restaurant-address"></span><br>
+                    <strong>Phone Number: </strong><span id="restaurant-phone"></span><br>
+                    <strong>Rating: </strong><span id="restaurant-rating"></span><br>
+                    <strong>Website:</strong> <a id="restaurant-website" target="_blank"></a><br>
+    
+                    <span class="badge bg-success" id="delivery-badge">Offers Delivery</span>
+                    <span class="badge bg-success" id="pickup-badge">Offers Takeout</span>
+                    <span class="badge bg-success" id="dinein-badge">Offers Dine-In</span>
+    
+                    <h6 class="text-center fs-5">Opening Hours</h6>
+                    <ul id="opening-hours" class="list-unstyled text-center"></ul>
+    
+                    <h6 class="text-center fs-5">Reviews</h6>
+                    <div id="reviews-container" class="reviews-container"></div>
+    
+                    <h6 class="text-center fs-5">Images</h6>
+                    <div id="images-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

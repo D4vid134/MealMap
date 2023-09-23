@@ -1,0 +1,142 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0px;
+}
+
+.messages {
+    width: 80%;               
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.auth-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 70px);
+}
+
+.auth-card {
+    margin: auto !important;
+}
+
+.card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 10px;
+    height: fit-content;
+}
+
+.auth-form-title {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.auth-form-label {
+    width: 95%;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    font-size: 16px;
+}
+.auth-form-input {
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.auth-form-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.auth-form-button:hover {
+    background-color: #0056b3;
+}
+
+.navbar {
+    background-color: #333;
+    overflow: hidden;
+    padding: 1rem 2rem;
+}
+
+.navbar-brand {
+    float: left;
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    margin-right: 1rem;
+}
+
+.navbar-menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar-menu li {
+    display: inline;
+    margin-right: 10px;
+}
+
+.navbar-menu li a {
+    text-decoration: none;
+    padding: 8px 16px;
+    color: white;
+    transition: background-color 0.2s;
+}
+
+.navbar-menu li a:hover {
+    background-color: #555;
+}
+
+.search-restaurant-container {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: calc(100vh - 70px);
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-evenly;
+    align-items: center;
+}
+
+.star-rating i {
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.star-rating i.active {
+    color: orange;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.is-favorite {
+    margin: auto !important;
+    transform: translateX(100%) translateY(100%);
+    font-size: 18px;
+}
+
+.restaurant-list {
+    height: 360px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}

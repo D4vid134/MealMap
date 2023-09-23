@@ -1,0 +1,271 @@
+{% extends "main.html" %}
+
+{% block content %}
+{% load static %}
+<style>
+    .search-restaurant-container {
+        background-image: url('{% static "images/pexels-restaurant-search-background.jpg" %}');
+    }
+</style>
+<div class="search-restaurant-container">
+    <div class="card">
+        <h2 class="auth-form-title">Find Specific Restaurant</h2>
+        <form method="post" style="border-bottom: 2px solid #ddd">
+            {% csrf_token %}
+            
+            <label class="auth-form-label">Name of Restaurant:
+                <input class="auth-form-input" placeholder="Name" type="text" name="name" required value="{{ specific_restaurant_form.data.name }}">
+            </label>
+            
+            <label class="auth-form-label">Address:
+                <input class="auth-form-input" placeholder="Any part of address. Just the city is great" type="text" name="address" required value="{{ specific_restaurant_form.data.address }}">
+            </label>
+        
+            <label class="auth-form-label">Other Keywords (optional):
+                <input class="auth-form-input" placeholder="Keywords/descriptions" type="text" name="keywords" value="{{ specific_restaurant_form.data.keywords }}">
+            </label>
+
+            <input type="hidden" name="form_type" value="specific_restaurant_form">
+            
+            <button style="margin-bottom: 10px;" class="auth-form-button" type="submit">Find Restaurant</button>
+        </form>
+
+        {% if specific_restaurant and specific_restaurant.name %}
+            <h2 style="font-family: 'Arial', sans-serif; font-size: 24px; color: #333; margin-bottom: 4px;">{{specific_restaurant.name}}</h2>
+            <h3 style="font-family: 'Arial', sans-serif; font-size: 20px; color: grey; margin-bottom: 0px;">Rating: {{specific_restaurant.rating}}</h3>
+            <h3 style="font-family: 'Arial', sans-serif; font-size: 20px; color: grey; margin-bottom: 0px;">Status: {{specific_restaurant.open_now|yesno:"Open,Closed"}}</h3>
+            <h3 style="font-family: 'Arial', sans-serif; font-size: 20px; color: grey; margin-bottom: 0px;">Distance: {{specific_restaurant.distance}} miles</h3>
+
+            <button style="width: 200px; align-self: center; margin-bottom: 10px;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#specificRestaurantModal">
+                More Details
+            </button>
+            {% if specific_restaurant.details.place_id not in saved_restaurants_place_ids %}
+                <form method="post" style="align-self: center">
+                    {% csrf_token %}
+                    <input type="hidden" name="place_id" value="{{ specific_restaurant.details.place_id }}">
+                    <input type="hidden" name="name" value="{{ specific_restaurant.details.name }}">
+                    <input type="hidden" name="address" value="{{ specific_restaurant.details.address }}">
+                    <input type="hidden" name="form_type" value="save_restaurant">
+                    <button style="width: 200px; align-self: center" class="btn btn-primary" type="submit">
+                        Save
+                    </button>
+                </form>
+            {% else %}
+                <div style="margin: auto">Restaurant Already Saved</div>
+            {% endif %}
+        {% endif %}
+        
+        <!-- Modal -->
+        <div class="modal fade" id="specificRestaurantModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-2">{{ specific_restaurant.name }}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <strong>Address:</strong> {{ specific_restaurant.details.address }}<br>
+                        <strong>Phone Number:</strong> {{ specific_restaurant.details.phone_number }}<br>
+                        <strong>Rating:</strong> {{ specific_restaurant.details.rating }}/5<br>
+                        <strong>Website:</strong> <a href="{{ specific_restaurant.details.website }}" target="_blank">{{ specific_restaurant.details.website }}</a><br>
+                        
+                        {% if specific_restaurant.details.delivery %}
+                            <span class="badge bg-success">Offers Delivery</span>
+                        {% endif %}
+                        {% if specific_restaurant.details.takeout %}
+                            <span class="badge bg-success">Offers Takeout</span>
+                        {% endif %}
+                        {% if specific_restaurant.details.dinein %}
+                            <span class="badge bg-success">Offers Dine-In</span>
+                        {% endif %}
+
+                        <h6 class="text-center fs-5">Opening Hours</h6>
+                        <ul class="list-unstyled text-center">
+                            {% for day in specific_restaurant.details.weekday_text %}
+                                <li class="mb-2" style="font-size: 16px">{{ day }}</li>
+                            {% endfor %}
+                        </ul>
+
+
+                        <h6 class="text-center fs-5">Reviews</h6>
+                        <div class="reviews-container">
+                            {% for review in specific_restaurant.details.reviews %}
+                            <div class="card mb-2" style="max-width: 90%; width: 90%; margin: 0 auto;">
+                                <div class="card-body">
+                                    {% if review.profile_photo_url %}
+                                        <img src="{{ review.profile_photo_url }}" alt="{{ review.author_name }}" class="rounded-circle" style="width: 50px; height: 50px;">
+                                    {% endif %}
+                                    <strong>{{ review.author_name }}</strong>
+
+                                    <div class="mt-2">
+                                        {% for i in range_1_to_5 %}
+                                            {% if i <= review.rating %}
+                                                <i class="bi bi-star-fill" style="color: orange;"></i>
+                                            {% else %}
+                                                <i class="bi bi-star-fill" style="color: rgb(171, 171, 171);"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <p>{{ review.text }}</p>
+                                    
+                                    {% if review.time %}
+                                        <small class="text-muted">{{ review.time|date:"F j, Y" }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        {% if specific_restaurant.details.photo_references %}
+                            <h6 class="text-center fs-5">Images</h6>
+                            {% for photo_ref in specific_restaurant.details.photo_references %}
+                                <img style="width: 49%" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={{ photo_ref }}&key={{GOOGLE_API_KEY}}" alt="{{ specific_restaurant.details.name }}" class="img-fluid mb-3">
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+
+    <div class="card">
+        <h2 class="auth-form-title">Find Nearby Restaurants</h2>
+        <form method="post" style="border-bottom: 2px solid #ddd">
+            {% csrf_token %}
+    
+            <label class="auth-form-label">Minimum Rating:
+                <input class="auth-form-input" placeholder="0-5" type="number" name="min_rating" min="0" max="5" value="{{ nearby_restaurant_form.data.min_rating }}">
+            </label>
+            
+            <label class="auth-form-label">Maximum Distance From You:
+                <input class="auth-form-input" placeholder="In miles" type="number" name="max_distance" value="{{ nearby_restaurant_form.data.max_distance }}">
+            </label>
+        
+            <label class="auth-form-label">Keyword:
+                <input class="auth-form-input" placeholder="Type or name of restaurant" type="text" name="type" value="{{ nearby_restaurant_form.data.type }}">
+            </label>
+            
+            <input type="hidden" name="form_type" value="nearby_restaurants_form">
+            <button style="margin-bottom: 10px;" class="auth-form-button" type="submit">Find Restaurants</button>
+        </form>
+
+        {% if number_of_results > -1 %}
+            <p style="font-family: 'Arial', sans-serif; font-size: 14px; color: grey; margin-bottom: 0px;">Number Restaurants Found: {{number_of_results}}</p>
+        {% endif %}
+        {% if nearby_restaurants %}
+            <div class="restaurant-list">
+                {% for restaurant in nearby_restaurants %}
+                    <div class="restaurant-listing mb-3">
+                        <h2 style="font-family: 'Arial', sans-serif; font-size: 24px; color: #333; margin-bottom: 4px;">{{ restaurant.name }}</h2>
+                        <h3 style="font-family: 'Arial', sans-serif; font-size: 20px; color: grey; margin-bottom: 0px;">Rating: {{ restaurant.rating }}</h3>
+                        <h3 style="font-family: 'Arial', sans-serif; font-size: 20px; color: grey; margin-bottom: 0px;">Status: {{ restaurant.open_now|yesno:"Open,Closed" }}</h3>
+                        
+                        <div class="d-flex align-items-center">
+                            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#restaurantModal_{{ restaurant.place_id }}">
+                                More Details
+                            </button>
+            
+                            {% if restaurant.details.place_id not in saved_restaurants_place_ids %}
+                                <form method="post" style="align-self: center">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="place_id" value="{{ restaurant.details.place_id }}">
+                                    <input type="hidden" name="name" value="{{ restaurant.name }}">
+                                    <input type="hidden" name="address" value="{{ restaurant.details.address }}">
+                                    <input type="hidden" name="form_type" value="save_restaurant">
+                                    <button class="btn btn-primary" type="submit">
+                                        Save
+                                    </button>
+                                </form>
+                            {% else %}
+                                <div style="margin: auto">Restaurant Already Saved</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Modal for each restaurant. This should be within the for loop -->
+    {% for restaurant in nearby_restaurants %}
+    <div class="modal fade" id="restaurantModal_{{restaurant.place_id}}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-2">{{restaurant.name}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <strong>Address:</strong> {{ restaurant.details.address }}<br>
+                    <strong>Phone Number:</strong> {{ restaurant.details.phone_number }}<br>
+                    <strong>Rating:</strong> {{ restaurant.details.rating }}/5<br>
+                    <strong>Website:</strong> <a href="{{ restaurant.details.website }}" target="_blank">{{ restaurant.details.website }}</a><br>
+                    
+                    {% if restaurant.details.delivery %}
+                        <span class="badge bg-success">Offers Delivery</span>
+                    {% endif %}
+                    {% if restaurant.details.takeout %}
+                        <span class="badge bg-success">Offers Takeout</span>
+                    {% endif %}
+                    {% if restaurant.details.dinein %}
+                        <span class="badge bg-success">Offers Dine-In</span>
+                    {% endif %}
+
+                    <h6 class="text-center fs-5">Opening Hours:</h6>
+                    <ul class="list-unstyled text-center">
+                        {% for day in restaurant.details.weekday_text %}
+                            <li class="mb-2" style="font-size: 16px">{{ day }}</li>
+                        {% endfor %}
+                    </ul>
+
+
+                    <h6 class="text-center fs-5">Reviews:</h6>
+                    <div class="reviews-container">
+                        {% for review in restaurant.details.reviews %}
+                        <div class="card mb-2" style="max-width: 90%; width: 90%; margin: 0 auto;">
+                            <div class="card-body">
+                                {% if review.profile_photo_url %}
+                                    <img src="{{ review.profile_photo_url }}" alt="{{ review.author_name }}" class="rounded-circle" style="width: 50px; height: 50px;">
+                                {% endif %}
+                                <strong>{{ review.author_name }}</strong>
+
+                                <div class="mt-2">
+                                    {% for i in range_1_to_5 %}
+                                        {% if i <= review.rating %}
+                                            <i class="bi bi-star-fill" style="color: orange;"></i>
+                                        {% else %}
+                                            <i class="bi bi-star-fill" style="color: rgb(171, 171, 171);"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                                <p>{{ review.text }}</p>
+                                
+                                {% if review.time %}
+                                    <small class="text-muted">{{ review.time|date:"F j, Y" }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if restaurant.details.photo_references %}
+                        <h6 class="text-center fs-5">Images:</h6>
+                        {% for photo_ref in restaurant.details.photo_references %}
+                            <img style="width: 49%" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={{ photo_ref }}&key={{GOOGLE_API_KEY}}" alt="{{ restaurant.details.name }}" class="img-fluid mb-3">
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
