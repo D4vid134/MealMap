@@ -35,10 +35,8 @@ Images:
 Nearby Restaurants Search
 ![nearbysearch](https://github.com/D4vid134/MealMap/assets/110314087/d984e6c2-2e8d-4943-9151-1ce0d0544eff)
 
-
 Dining Diary 
-![DiningDIary](https://github.com/D4vid134/MealMap/assets/110314087/4b1a700e-c3c2-47ab-8751-9accae1ca1c7)
-
+![dininDiary](https://github.com/D4vid134/MealMap/assets/110314087/e1120b39-71b4-49e5-9f4c-60d63bfded49)
 
 More Details/Details Modal from button
 ![modal1](https://github.com/D4vid134/MealMap/assets/110314087/7b2f9758-3c24-4a3b-9ba6-4d899f95232c)
