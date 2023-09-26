@@ -33,11 +33,12 @@ Installation Instructions:
 Images:
 
 Nearby Restaurants Search
-![nearbysearch](https://github.com/D4vid134/MealMap/assets/110314087/d984e6c2-2e8d-4943-9151-1ce0d0544eff)
+![NearbyRestaurants](https://github.com/D4vid134/MealMap/assets/110314087/f6972583-97a6-4631-ae7c-5eaba7ffba26)
 
 Dining Diary 
-![dininDiary](https://github.com/D4vid134/MealMap/assets/110314087/e1120b39-71b4-49e5-9f4c-60d63bfded49)
+![dininDiary](https://github.com/D4vid134/MealMap/assets/110314087/64c6276d-94b7-4037-a8fb-e825c020c088)
 
 More Details/Details Modal from button
-![modal1](https://github.com/D4vid134/MealMap/assets/110314087/7b2f9758-3c24-4a3b-9ba6-4d899f95232c)
-![modal2](https://github.com/D4vid134/MealMap/assets/110314087/1555fbb1-1ab1-4059-b1a8-75ab4a231989)
+![modal1](https://github.com/D4vid134/MealMap/assets/110314087/4978dac2-2f24-4c55-b752-7c71ebf60ff0)
+![modal2](https://github.com/D4vid134/MealMap/assets/110314087/476e371f-9801-4f0f-8f08-3e71fb504253)
+
