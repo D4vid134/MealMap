@@ -1,3 +1,5 @@
+This project was made for a course final project. It is used to demonstrate the ability to use a database, integrate external API, and provide a polished dynamic web application
+
 Meal Map: Navigate Your Culinary Landscape
 
 Introduction:
